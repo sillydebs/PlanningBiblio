@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+require_once(__DIR__ . '/../../public/absences/class.absences.php');
+
 /**
  * @Entity @Table(name="personnel")
  **/
@@ -175,5 +177,41 @@ class Agent extends PLBEntity {
         $emails_string = $this->mails_responsables();
 
         return explode(';', $emails_string);
+    }
+
+    public function isAbsentOn($from, $to)
+    {
+        $a = new \absences();
+        if ($a->check($this->id(), $from, $to, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isOnVacationOn($from, $to)
+    {
+        $c = new \conges();
+        if ($c->check($this->id(), $from, $to, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getWorkingHoursOn($date)
+    {
+        $working_hours = new \planningHebdo();
+        $working_hours->perso_id = $this->id;
+        $working_hours->debut = $date;
+        $working_hours->fin = $date;
+        $working_hours->valide = false;
+        $working_hours->fetch();
+
+        if (empty($working_hours->elements)) {
+            return array();
+        }
+
+        return $working_hours->elements[0];
     }
 }

@@ -1205,3 +1205,16 @@ div.presents-absents {
 #tableConges td{
   white-space: nowrap;
 }
+
+.menuTrigger {
+  position: relative;
+}
+
+.arrow-right {
+  background:url("images/arrow-right-16.png") no-repeat center;
+  z-index:7;
+  display: none;
+  position:absolute;
+  right: -15px;
+  top: calc(50% - 8px);
+}
