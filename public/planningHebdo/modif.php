@@ -318,6 +318,8 @@ for ($j=0;$j<$config['nb_semaine'];$j++) {
                     $selected=$temps[$i-1][4]==$site?"selected='selected'":null;
                     echo "<option value='$site' $selected >{$config["Multisites-site{$site}"]}</option>\n";
                 }
+                $selected = $temps[$i-1][4] == -1 ? "selected='selected'" : null;
+                echo "<option value='-1' $selected >Tout site</option>\n";
                 echo "</select></td>";
             } else {
                 $site = isset($temps[$i-1][4]) ? $temps[$i-1][4] : null;
