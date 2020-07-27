@@ -28,6 +28,10 @@ $status_extra = array();
 $status_waiting = array(3);
 $status_validated = array(2,5);
 
+// Days_before is used to remove entries that have been deleted from source file.
+// If null, empty or 0 : deleted entries will not be removed. If > 0 : entries with end upper than today minor the specified value will be deleted
+$days_before = 0;
+
 session_start();
 
 /** $version=$argv[0]; permet d'interdire l'execution de ce script via un navigateur
@@ -39,8 +43,8 @@ $version=$argv[0];
 // chdir($path) : important pour l'execution via le cron
 chdir($path);
 
-require_once "$path/include/config.php";
-require_once "$path/personnel/class.personnel.php";
+require_once "$path/public/include/config.php";
+require_once "$path/public/personnel/class.personnel.php";
 
 $CSRFToken = CSRFToken();
 
@@ -154,6 +158,22 @@ $dbd->CSRFToken = $CSRFToken;
 $dbd->prepare("DELETE FROM `{$dbprefix}absences` WHERE `id` = :id;");
 
 
+// Absences DB / file : used to remove entries deleted from source file
+$absences_file = array();
+$absences_db = array();
+
+if (!empty($days_before)) {
+    $end = date('Y-m-d', strtotime("- $days_before days"));
+    $dbx = new db();
+    $dbx->CSRFToken = $CSRFToken;
+    $dbx->select2('absences', array('ical_key'), array('cal_name' =>'hamac', 'fin' => ">$end"));
+    if ($dbx->result) {
+        foreach ($db->result as $elem) {
+            $absences_db[] = $elem['ical_key'];
+        }
+    }
+}
+
 // On lit le fichier CSV
 $inF = fopen($filename, 'r');
 
@@ -161,6 +181,7 @@ logs("On lit le fichier CSV " . $filename, "Hamac", $CSRFToken);
 
 while ($tab = fgetcsv($inF, 1024, ';')) {
     $uid = $tab[0];
+    $absences_file[] = $uid;
 
     logs("uid = " . $uid, "Hamac", $CSRFToken);
 
@@ -259,6 +280,22 @@ while ($tab = fgetcsv($inF, 1024, ';')) {
     }
 }
 fclose($inF);
+
+// Remove entries deleted from source file
+// $dbd : DB Delete
+if (!empty($absences_db)) {
+    $dbd = new dbh();
+    $dbd->CSRFToken = $CSRFToken;
+    $dbd->prepare("DELETE FROM `{$dbprefix}absences` WHERE `cal_name` = 'hamac' AND `ical_key` = :ical_key;");
+
+    foreach ($absences_db as $elem) {
+        if (!in_array($elem, $absences_file)) {
+            logs("Absence deleted from source file : $elem", "Hamac", $CSRFToken);
+            $delete = array(':ical_key' => $elem);
+            $dbd->execute($delete);
+        }
+    }
+}
 
 // Unlock
 unlink($lockFile);
