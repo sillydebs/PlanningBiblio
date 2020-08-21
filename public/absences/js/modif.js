@@ -1,12 +1,9 @@
 /**
-Planning Biblio, Version 2.7.08
+Planning Biblio
 Licence GNU/GPL (version 2 et au dela)
 Voir les fichiers README.md et LICENSE
-@copyright 2011-2018 Jérôme Combes
 
-Fichier : absences/js/modif.js
-Création : 28 février 2014
-Dernière modification : 14 décembre 2017
+@file public/absences/js/modif.js
 @author Jérôme Combes <jerome@planningbiblio.fr>
 
 Description :
@@ -864,9 +861,10 @@ function verif_absences(ctrl_form){
 
   var admin=$("#admin").val();
   var retour=true;
+  var baseURL = $('#baseURL').val();
 
   $.ajax({
-    url: "/include/ajax/holiday-absence-control.php",
+    url: baseURL + "/ajax/holiday-absence-control",
     type: "get",
     datatype: "json",
     data: {perso_ids: JSON.stringify(perso_ids), id: id, groupe: groupe, debut: debut, fin: fin, type:'absence'},
