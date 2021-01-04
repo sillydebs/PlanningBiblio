@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\OneToMany;
 require_once(__DIR__ . '/../../public/absences/class.absences.php');
 
 /**
@@ -114,6 +115,19 @@ class Agent extends PLBEntity {
 
     /** @Column(type="float") **/
     protected $conges_annuel;
+
+    
+    /**
+     * @OneToMany(targetEntity="Manager", mappedBy="perso_id")
+     * @var ArrayCollection
+     */
+    private $perso;
+
+    /**
+     * @OneToMany(targetEntity="Manager", mappedBy="responsable")
+     * @var ArrayCollection
+     */
+    private $responsables;
 
     public function can_access(array $accesses) {
         if (empty($accesses)) {
