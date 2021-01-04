@@ -20,14 +20,14 @@ class Manager extends PLBEntity {
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="Agent", inversedBy="perso")
+     * @ManyToOne(targetEntity="Agent",inversedBy="responsables")
      * @JoinColumn(name="perso_id", referencedColumnName="id")
      * @var ArrayCollection
      */
     protected $perso_id;
 
     /**
-     * @ManyToOne(targetEntity="Agent",inversedBy="responsables")
+     * @ManyToOne(targetEntity="Agent")
      * @JoinColumn(name="responsable", referencedColumnName="id")
      * @var ArrayCollection
      */

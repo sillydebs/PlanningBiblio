@@ -116,15 +116,8 @@ class Agent extends PLBEntity {
     /** @Column(type="float") **/
     protected $conges_annuel;
 
-    
     /**
      * @OneToMany(targetEntity="Manager", mappedBy="perso_id")
-     * @var ArrayCollection
-     */
-    private $perso;
-
-    /**
-     * @OneToMany(targetEntity="Manager", mappedBy="responsable")
      * @var ArrayCollection
      */
     private $responsables;
