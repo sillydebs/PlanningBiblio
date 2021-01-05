@@ -19,20 +19,19 @@ class Manager extends PLBEntity {
     /** @Id @Column(type="integer", length=11) @GeneratedValue **/
     protected $id;
 
-    /**
-     * @ManyToOne(targetEntity="Agent",inversedBy="responsables")
-     * @JoinColumn(name="perso_id", referencedColumnName="id")
-     * @var ArrayCollection
-     */
+    /** @Column(type="integer", length=11) **/
     protected $perso_id;
 
-    /**
-     * @ManyToOne(targetEntity="Agent")
-     * @JoinColumn(name="responsable", referencedColumnName="id")
-     * @var ArrayCollection
-     */
+    /** @Column(type="integer", length=11) **/
     protected $responsable;
 
     /** @Column(type="integer", length=1) **/
     protected $notification;
+
+    /**
+     * @ManyToOne(targetEntity="Agent",inversedBy="responsables")
+     * @JoinColumn(name="perso_id", referencedColumnName="id")
+     */
+    protected $agent;
+
 }
