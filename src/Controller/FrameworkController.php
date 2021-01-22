@@ -100,4 +100,20 @@ class FrameworkController extends BaseController
         );
         return $this->output("/framework/index.html.twig");
     }
+    /**
+     * @Route ("/framework", name="framework.delete_tab", methods={"DELETE"})
+     */
+    public function deleteTable(Request $request, Session $session){
+        $CSRFToken = $request->get("CSRFToken");
+        $tableau = $request->get("tableau");
+        
+        $t = new \tableau();
+        
+        $t->number = $tableau;
+        $t->CSRFToken = $CSRFToken;
+        
+        $t->deleteTab();
+        return $this->json("OK");
+    }
+
 }

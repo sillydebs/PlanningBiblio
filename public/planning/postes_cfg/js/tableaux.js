@@ -82,16 +82,16 @@ function supprimeTableau(tableau){
     var CSRFToken = $('#CSRFSession').val();
     var baseURL = $("#baseURL").val();
     $.ajax({
-      url: "planning/postes_cfg/ajax.supprimeTableau.php",
-      type: "post",
+      url: baseURL + "/framework",
+      type: "delete",
       dataType: "json",
       data: {tableau: tableau, CSRFToken: CSRFToken},
       success: function(){
         msg=encodeURIComponent("Le tableau \""+nom+"\" a été supprimé avec succès");
-        window.location.href=baseURL + "/framework?msgType=success&msg="+msg;
+        window.location=baseURL + "/framework?msgType=success&msg="+msg;
       },
       error: function(result){
-    CJInfo("Une erreur est survenue lors de la suppression du tableau \""+nom+"\"\n"+result.responseText,"error");
+        CJInfo("Une erreur est survenue lors de la suppression du tableau \""+nom+"\"\n"+result.responseText,"error");
       }
     });
   }
